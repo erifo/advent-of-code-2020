@@ -1,17 +1,30 @@
+from instruction import Instruction
+from boot import Boot
+
 def load(filename):
     f = open(filename, "r")
     lines = f.readlines()
-    return lines
+    instructions = []
+    for line in lines:
+        instr_type, instr_val = line.split(" ")
+        instr = Instruction(instr_type, int(instr_val))
+        instructions.append(instr)
+    return Boot(instructions)
 
-def solve_a(data):
-    pass
+def print_instructions(boot):
+    for i in range(boot.length()):
+        instr = boot.get_instr_at(i)
+        print(i, ":", instr.type, instr.value)
 
-def solve_b(data):
+def solve_a(boot):
+    boot.run()
+
+def solve_b(boot):
     pass
 
 def main():
-    data = load("data.txt")
-    print(solve_a(data)) #
-    print(solve_b(data)) #
+    boot = load("data.txt")
+    print(solve_a(boot)) #1749
+    print(solve_b(boot)) #
 
 main()
