@@ -15,10 +15,8 @@ class Boot():
         self.position += 1
 
     def call(self, instr):
-        instr.print()
+        #instr.print()
         if (instr.called > 0):
-            print("LOOP DETECTED")
-            print("ACCUMULATOR:", self.accumulator)
             return -1
         instr.called += 1
         if instr.type == "acc":
@@ -35,8 +33,19 @@ class Boot():
     def get_instr_at(self, i):
         return self.instructions[i]
     
+    def jmpnop_switch_at(self, i):
+        instr = self.get_instr_at(i)
+        #print("Switching instr [",instr.type,"] on line", i+1)
+        if instr.type == "jmp":
+            instr.type = "nop"
+        elif instr.type == "nop":
+            instr.type = "jmp"
+
     def run(self):
-        while (True):
+        while (self.position < self.length()):
             instr = self.get_instr_at(self.position)
-            if self.call(instr) == -1:
-                break
+            result = self.call(instr)
+            if result == -1: #Endless loop detected.
+                return False
+        return True
+        
